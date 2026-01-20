@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Python: Perulangan For</title>
+    <style>
+        :root {
+            --primary: #306998; /* Python Blue */
+            --secondary: #FFD43B; /* Python Yellow */
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar */
+        nav {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        nav h1 { margin: 0; font-size: 1.5rem; }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Sections */
+        section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 { color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 0.5rem; }
+        h3 { color: #475569; margin-top: 1.5rem; }
+
+        /* Code Blocks */
+        pre {
+            background-color: #2d2d2d;
+            color: #ccc;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        
+        code { font-family: 'Consolas', monospace; color: #e83e8c; }
+        .comment { color: #6a9955; }
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+
+        /* Interactive Game Area */
+        .game-area {
+            background-color: #e2e8f0;
+            border: 2px dashed var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+            min-height: 200px;
+        }
+
+        #runner {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: left 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        #goal {
+            width: 40px;
+            height: 40px;
+            background-color: var(--success);
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 4px;
+        }
+
+        .controls {
+            margin-top: 1rem;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        button:hover { background-color: #204d74; }
+        
+        .feedback {
+            margin-top: 1rem;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .correct { background-color: #dcfce7; color: #166534; }
+        .incorrect { background-color: #fee2e2; color: #991b1b; }
+
+        /* Output Console */
+        .console-output {
+            background: black;
+            color: #00ff00;
+            font-family: monospace;
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 60px;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav>
+    <h1>Kelas Informatika: Python Loops</h1>
+</nav>
+
+<div class="container">
+
+    <section>
+        <h2>Apa itu Perulangan (Looping)?</h2>
+        <p>Bayangkan kamu dihukum guru untuk menulis kalimat "Saya tidak akan terlambat lagi" sebanyak 100 kali di papan tulis. Jika kita menulisnya manual, tangan akan pegal!</p>
+        <p>Dalam pemrograman, kita menggunakan <strong>Loop</strong> untuk melakukan tugas yang berulang secara otomatis. Di Python, salah satu cara paling umum adalah menggunakan <code>for</code> loop.</p>
+    </section>
+
+    <section>
+        <h2>Sintaks Dasar</h2>
+        <p>Struktur dasar perulangan <code>for</code> di Python:</p>
+        <pre><span class="keyword">for</span> variabel <span class="keyword">in</span> urutan:
+    <span class="comment"># Blok kode yang akan diulang</span>
+    <span class="keyword">print</span>(variabel)</pre>
+
+        <h3>1. Menggunakan Fungsi <code>range()</code></h3>
+        <p>Fungsi <code>range()</code> membuat urutan angka. Ini teman terbaik <code>for</code> loop.</p>
+        <ul>
+            <li><code>range(5)</code>: Menghasilkan 0, 1, 2, 3, 4 (Total 5 angka, mulai dari 0).</li>
+            <li><code>range(1, 6)</code>: Menghasilkan 1, 2, 3, 4, 5 (Mulai dari 1, berhenti SEBELUM 6).</li>
+        </ul>
+        
+        <p><strong>Contoh Kode:</strong></p>
+        <pre><span class="keyword">for</span> i <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">3</span>):
+    <span class="keyword">print</span>(<span class="string">"Semangat Belajar!"</span>)</pre>
+        <p><em>Output: "Semangat Belajar!" akan dicetak 3 kali.</em></p>
+    </section>
+
+    <section>
+        <h2>Contoh Kasus & Penyelesaian</h2>
+        
+        <h3>Kasus 1: Menjumlahkan Deret Angka</h3>
+        <p><strong>Masalah:</strong> Hitunglah jumlah total angka dari 1 sampai 10 (1+2+3+...+10).</p>
+        <p><strong>Penyelesaian:</strong> Kita butuh variabel "penampung" (misalnya <code>total</code>) yang awalnya 0. Setiap perulangan, kita tambahkan angka saat ini ke <code>total</code>.</p>
+        <pre>
+total = <span class="number">0</span>
+<span class="keyword">for</span> angka <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">1</span>, <span class="number">11</span>):
+    total = total + angka
+    
+<span class="keyword">print</span>(<span class="string">"Jumlah totalnya adalah:"</span>, total)</pre>
+
+        <h3>Kasus 2: Absensi Siswa</h3>
+        <p><strong>Masalah:</strong> Kita punya daftar nama siswa, dan ingin menyapa mereka satu per satu.</p>
+        <pre>
+siswa = [<span class="string">"Budi"</span>, <span class="string">"Siti"</span>, <span class="string">"Eko"</span>]
+
+<span class="keyword">for</span> nama <span class="keyword">in</span> siswa:
+    <span class="keyword">print</span>(<span class="string">f"Halo, {nama}! Silakan masuk."</span>)</pre>
+    </section>
+
+    <section>
+        <h2>🎮 Mini Game 1: The Loop Runner</h2>
+        <p>Bantu bola biru mencapai kotak hijau! Jarak antara start dan finish adalah <strong>5 langkah</strong>. Pilih kode loop yang tepat agar bola berhenti pas di kotak hijau.</p>
+        
+        <div class="game-area">
+            <div id="runner">Start</div>
+            <div id="goal">Goal</div>
+        </div>
+
+        <p>Pilih kode yang benar untuk maju 5 langkah:</p>
+        <div class="controls">
+            <button onclick="runGame(3)">for i in range(3): maju()</button>
+            <button onclick="runGame(5)">for i in range(5): maju()</button>
+            <button onclick="runGame(10)">for i in range(10): maju()</button>
+        </div>
+
+        <div id="game-feedback" class="feedback"></div>
+    </section>
+
+    <section>
+        <h2>🎮 Mini Game 2: Penebak Pola</h2>
+        <p>Lihat kode di bawah ini. Menurutmu, pola bintang seperti apa yang akan muncul di layar hitam (Console)? Klik tombol untuk melihat hasilnya!</p>
+
+        <pre>
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">1</span>, <span class="number">6</span>):
+    <span class="keyword">print</span>(<span class="string">"*"</span> * i)</pre>
+
+        <button onclick="showPattern()">Jalankan Kode</button>
+        
+        <div class="console-output" id="pattern-output">
+            > Menunggu kode dijalankan...
+        </div>
+        <p><small>Tips: Simbol <code>*</code> dikalikan angka <code>i</code> akan mengulang simbol tersebut.</small></p>
+    </section>
+
+</div>
+
+<script>
+    // Game 1 Logic
+    function runGame(steps) {
+        const runner = document.getElementById('runner');
+        const feedback = document.getElementById('game-feedback');
+        const stepSize = 15; // percent width roughly
+        
+        // Reset position
+        runner.style.left = '10px';
+        runner.textContent = '0';
+        
+        feedback.style.display = 'block';
+        feedback.className = 'feedback';
+        feedback.textContent = 'Menjalankan loop...';
+
+        let currentStep = 0;
+
+        // Simulate Loop with Interval
+        let interval = setInterval(() => {
+            currentStep++;
+            runner.style.left = (10 + (currentStep * stepSize)) + '%';
+            runner.textContent = currentStep;
+
+            if (currentStep >= steps) {
+                clearInterval(interval);
+                checkResult(steps);
+            }
+        }, 500);
+    }
+
+    function checkResult(steps) {
+        const feedback = document.getElementById('game-feedback');
+        // Let's assume correct distance is roughly 5 steps (approx 85% width)
+        if (steps === 5) {
+            feedback.textContent = "BERHASIL! Loop berjalan 5 kali, pas sampai tujuan!";
+            feedback.classList.add('correct');
+        } else if (steps < 5) {
+            feedback.textContent = "GAGAL! Loop berhenti terlalu cepat (Underloop).";
+            feedback.classList.add('incorrect');
+        } else {
+            feedback.textContent = "GAGAL! Loop berjalan terlalu jauh (Overloop/Infinite Loop risk!).";
+            feedback.classList.add('incorrect');
+        }
+    }
+
+    // Game 2 Logic
+    function showPattern() {
+        const output = document.getElementById('pattern-output');
+        output.innerHTML = "";
+        let content = "";
+        
+        let i = 1;
+        let interval = setInterval(() => {
+            let stars = "*".repeat(i);
+            content += stars + "<br>";
+            output.innerHTML = content;
+            i++;
+            
+            if (i > 5) clearInterval(interval);
+        }, 300);
+    }
+</script>
+
+</body>
+</html>
