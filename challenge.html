@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Dojo: Coding Exam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Press+Start+2P&family=VT323&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+
+    <style>
+        :root {
+            --bg: #0d1117;
+            --panel: #161b22;
+            --border: #30363d;
+            --accent: #2f81f7; /* GitHub Blue */
+            --success: #2ea043;
+            --error: #da3633;
+            --text: #c9d1d9;
+            --neon: #00ff41;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        /* Identity Form */
+        .identity-box {
+            background: #21262d; 
+            padding: 20px; 
+            border: 1px solid var(--accent); 
+            margin-bottom: 30px; 
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(47, 129, 247, 0.2);
+        }
+
+        .identity-box h3 { margin-top: 0; color: var(--accent); font-family: 'Press Start 2P'; font-size: 0.8rem; margin-bottom: 15px; }
+
+        .input-row { display: flex; gap: 15px; }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            background: #0d1117;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+        }
+        input:focus { outline: 2px solid var(--accent); }
+
+        header {
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 { font-family: 'Press Start 2P'; color: var(--neon); font-size: 1.5rem; line-height: 1.5; text-shadow: 0 0 5px rgba(0,255,65,0.3); }
+        
+        /* Soal Container */
+        .challenge-box {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+
+        .challenge-box:hover { border-color: #555; }
+
+        .challenge-header {
+            background: #21262d;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .challenge-header h3 { margin: 0; font-family: 'Fira Code', monospace; font-size: 1rem; }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-family: sans-serif;
+            letter-spacing: 1px;
+        }
+        .easy { background: #1f6feb; color: white; }
+        .medium { background: #d29922; color: black; }
+        .hard { background: #db6d28; color: white; }
+
+        .challenge-body { padding: 20px; }
+
+        .problem-text { margin-bottom: 15px; font-size: 0.95rem; line-height: 1.6; }
+        code { background: rgba(255,255,255,0.1); padding: 2px 5px; border-radius: 3px; font-family: 'Fira Code'; color: #ff7b72; }
+
+        /* Code Editor Area */
+        textarea {
+            width: 100%;
+            height: 150px;
+            background: #0d1117;
+            color: #e6edf3;
+            border: 1px solid #7d8590;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        textarea:focus { outline: 2px solid var(--neon); border-color: transparent; }
+
+        .controls { display: flex; gap: 10px; align-items: center; }
+
+        button.btn-run {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.7rem;
+            cursor: pointer;
+            background: var(--success); 
+            color: white;
+            transition: 0.2s;
+            box-shadow: 0 4px 0 #1b6328;
+        }
+
+        button.btn-run:active { transform: translateY(4px); box-shadow: 0 0 0; }
+        button.btn-run:hover { filter: brightness(1.1); }
+
+        /* Output Console */
+        .output-console {
+            background: black;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 15px;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            color: var(--neon);
+            min-height: 40px;
+            white-space: pre-wrap;
+        }
+
+        .status-msg {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+            font-weight: bold;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+        .status-correct { background: rgba(46, 160, 67, 0.2); color: #3fb950; border: 1px solid #2ea043; }
+        .status-wrong { background: rgba(218, 54, 51, 0.2); color: #f85149; border: 1px solid #da3633; }
+
+        /* Submit Section */
+        .submit-section {
+            margin-top: 60px; 
+            text-align: center; 
+            border-top: 2px dashed #30363d; 
+            padding-top: 40px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(90deg, #238636, #2ea043);
+            color: white; padding: 20px 40px; border: none; border-radius: 8px;
+            font-size: 1rem; cursor: pointer; font-family: 'Press Start 2P';
+            box-shadow: 0 0 20px rgba(46, 160, 67, 0.4);
+            text-transform: uppercase;
+        }
+        .btn-submit:disabled { background: gray; cursor: not-allowed; box-shadow: none; }
+
+        .nav-footer { margin-top: 30px; text-align: center; }
+        .nav-footer a { color: var(--accent); text-decoration: none; font-family: 'VT323'; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="identity-box">
+        <h3>🔐 IDENTITAS SISWA</h3>
+        <div class="input-row">
+            <input type="text" id="inputNama" placeholder="Nama Lengkap (Contoh: Budi Santoso)">
+            <input type="text" id="inputKelas" placeholder="Kelas (Contoh: XI PPLG 1)">
+        </div>
+    </div>
+
+    <header>
+        <h1>PYTHON DOJO<br>LIVE CODING EXAM</h1>
+        <p style="font-family: 'VT323'; font-size: 1.3rem; color: #8b949e;">>> MISSION: WRITE CODE, GET OUTPUT, SUBMIT. <<</p>
+    </header>
+
+    <div class="challenge-box">
+        <div class="challenge-header">
+            <h3>#1. Pemanasan Loop</h3>
+            <span class="badge easy">EASY</span>
+        </div>
+        <div class="challenge-body">
+            <p class="problem-text">
+                Buatlah program menggunakan <code>for</code> loop untuk mencetak kata <strong>"Saya Bisa Python"</strong> sebanyak <strong>5 kali</strong>.
+            </p>
+            <textarea id="code1">
+# Tulis kodemu di bawah ini
+for i in range(...):
+    print("...")</textarea>
+            <div class="controls">
+                <button class="btn-run" onclick="runCode(1)">▶ RUN CODE</button>
+            </div>
+            <pre id="output1" class="output-console">Hasil output akan muncul di sini...</pre>
+            <div id="status1" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-header">
+            <h3>#2. Deret Angka Dasar</h3>
+            <span class="badge easy">EASY</span>
+        </div>
+        <div class="challenge-body">
+            <p class="problem-text">
+                Cetaklah angka urut dari <strong>0 sampai 9</strong> (total 10 angka) ke bawah menggunakan fungsi <code>range()</code>.
+            </p>
+            <textarea id="code2">
+# Ingat, range dimulai dari 0 secara default
+for x in range(...):
+    print(x)</textarea>
+            <div class="controls">
+                <button class="btn-run" onclick="runCode(2)">▶ RUN CODE</button>
+            </div>
+            <pre id="output2" class="output-console">Hasil output akan muncul di sini...</pre>
+            <div id="status2" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-header">
+            <h3>#3. Deret Genap (Step)</h3>
+            <span class="badge medium">MEDIUM</span>
+        </div>
+        <div class="challenge-body">
+            <p class="problem-text">
+                Gunakan parameter ketiga pada <code>range(start, stop, step)</code>. <br>
+                Cetaklah angka <strong>Genap</strong> saja dari <strong>2 sampai 10</strong> (inklusif/angka 10 ikut tercetak).
+            </p>
+            <textarea id="code3">
+# Contoh output yang diminta:
+# 2
+# 4
+# ...
+# 10
+</textarea>
+            <div class="controls">
+                <button class="btn-run" onclick="runCode(3)">▶ RUN CODE</button>
+            </div>
+            <pre id="output3" class="output-console">Hasil output akan muncul di sini...</pre>
+            <div id="status3" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-header">
+            <h3>#4. Hitung Mundur (Countdown)</h3>
+            <span class="badge medium">MEDIUM</span>
+        </div>
+        <div class="challenge-body">
+            <p class="problem-text">
+                Buatlah loop hitung mundur dari <strong>5 sampai 1</strong>. Setelah loop selesai, cetak kata <strong>"MULAI!"</strong> di baris baru (di luar loop).
+            </p>
+            <textarea id="code4">
+# Gunakan step negatif (min)
+for i in range(..., ..., ...):
+    print(i)
+print("...")</textarea>
+            <div class="controls">
+                <button class="btn-run" onclick="runCode(4)">▶ RUN CODE</button>
+            </div>
+            <pre id="output4" class="output-console">Hasil output akan muncul di sini...</pre>
+            <div id="status4" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-header">
+            <h3>#5. Akumulasi Penjumlahan</h3>
+            <span class="badge hard">HARD</span>
+        </div>
+        <div class="challenge-body">
+            <p class="problem-text">
+                Hitunglah <strong>jumlah total</strong> dari angka 1 sampai 10 (1+2+3+...+10). <br>
+                Gunakan variabel penampung. Program hanya boleh mencetak <strong>satu angka hasil akhir</strong> (yaitu 55).
+            </p>
+            <textarea id="code5">
+total = 0
+for i in range(1, 11):
+    # tambahkan logika di sini
+    
+print(total)</textarea>
+            <div class="controls">
+                <button class="btn-run" onclick="runCode(5)">▶ RUN CODE</button>
+            </div>
+            <pre id="output5" class="output-console">Hasil output akan muncul di sini...</pre>
+            <div id="status5" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <div class="challenge-header">
+            <h3>#6. Logic Filter (If di dalam For)</h3>
+            <span class="badge hard">HARD</span>
+        </div>
+        <div class="challenge-body">
+            <p class="problem-text">
+                Loop angka dari 1 sampai 10. Jika angkanya <strong>5</strong>, cetak <strong>"FOUND"</strong>. Selain itu, jangan cetak apa-apa.
+            </p>
+            <textarea id="code6">
+for i in range(1, 11):
+    if i == 5:
+        # cetak sesuatu
+</textarea>
+            <div class="controls">
+                <button class="btn-run" onclick="runCode(6)">▶ RUN CODE</button>
+            </div>
+            <pre id="output6" class="output-console">Hasil output akan muncul di sini...</pre>
+            <div id="status6" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div class="submit-section">
+        <p style="margin-bottom: 20px;">Sudah mengerjakan semua dan semua lampu indikator hijau?</p>
+        <button onclick="submitScoreToGoogle()" class="btn-submit">
+            🚀 KIRIM NILAI KE GURU
+        </button>
+        <p id="kirim-status" style="margin-top: 15px; font-weight: bold; font-family: 'Fira Code';"></p>
+    </div>
+
+    <div class="nav-footer">
+        <a href="index.html">&lt; KEMBALI KE MATERI</a>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // CONFIGURATION AREA
+    // ==========================================
+    // GANTI URL DI BAWAH INI DENGAN URL GOOGLE SCRIPT ANDA
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw9gmtZYI7zxzxngscToJFRKZ4LPWFo3Ub0DJmW2WY3E4GrNb5H4_FrG8TFdPaN45bg/exec'; 
+    // Contoh: 'https://script.google.com/macros/s/AKfycbx.../exec'
+    // ==========================================
+
+
+    // KUNCI JAWABAN (EXPECTED OUTPUT)
+    const expectedOutputs = {
+        1: "Saya Bisa Python\nSaya Bisa Python\nSaya Bisa Python\nSaya Bisa Python\nSaya Bisa Python\n",
+        2: "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n",
+        3: "2\n4\n6\n8\n10\n",
+        4: "5\n4\n3\n2\n1\nMULAI!\n",
+        5: "55\n",
+        6: "FOUND\n"
+    };
+
+    // FUNGSI SKULPT (PYTHON RUNNER)
+    function builtinRead(x) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+            throw "File not found: '" + x + "'";
+        return Sk.builtinFiles["files"][x];
+    }
+
+    function runCode(id) {
+        var prog = document.getElementById("code" + id).value;
+        var outputElement = document.getElementById("output" + id);
+        var statusElement = document.getElementById("status" + id);
+        
+        outputElement.innerHTML = ""; 
+        statusElement.style.display = "none";
+        statusElement.className = "status-msg";
+
+        Sk.pre = "output" + id;
+        
+        Sk.configure({
+            output: function(text) { 
+                outputElement.innerHTML += text; 
+            },
+            read: builtinRead
+        });
+
+        var myPromise = Sk.misceval.asyncToPromise(function() {
+            return Sk.importMainWithBody("<stdin>", false, prog, true);
+        });
+
+        myPromise.then(function(mod) {
+            checkAnswer(id, outputElement.innerText);
+        },
+        function(err) {
+            outputElement.innerHTML = err.toString();
+            statusElement.innerText = "❌ ERROR: Cek sintaks kodemu!";
+            statusElement.className = "status-msg status-wrong";
+            statusElement.style.display = "block";
+        });
+    }
+
+    // FUNGSI CEK JAWABAN
+    function checkAnswer(id, userOutput) {
+        var statusElement = document.getElementById("status" + id);
+        
+        // Bersihkan output dari karakter return carriage (\r) agar kompatibel
+        let cleanUser = userOutput.replace(/\r/g, "");
+        let cleanKey = expectedOutputs[id].replace(/\r/g, "");
+
+        if (cleanUser === cleanKey) {
+            statusElement.innerText = "✅ BENAR! Logika kodemu tepat.";
+            statusElement.className = "status-msg status-correct";
+        } else {
+            statusElement.innerText = "⚠️ Output belum sesuai. Cek soal lagi.";
+            statusElement.className = "status-msg status-wrong";
+        }
+        statusElement.style.display = "block";
+    }
+
+    // FUNGSI KIRIM KE GOOGLE SHEET
+    function submitScoreToGoogle() {
+        const nama = document.getElementById('inputNama').value.trim();
+        const kelas = document.getElementById('inputKelas').value.trim();
+        const statusMsg = document.getElementById('kirim-status');
+        const btn = document.querySelector('.btn-submit');
+
+        // Validasi
+        if (!nama || !kelas) {
+            alert("⚠️ Harap isi Nama dan Kelas di bagian paling atas sebelum mengirim!");
+            window.scrollTo(0, 0);
+            return;
+        }
+
+        if (scriptURL === 'PASTE_URL_GOOGLE_APPS_SCRIPT_DISINI') {
+            alert("⚠️ ERROR: Pak Guru belum mengatur URL Google Script di kode HTML.");
+            return;
+        }
+
+        // Hitung Skor
+        let correctCount = document.querySelectorAll('.status-correct').length;
+        let finalScore = Math.round((correctCount / 6) * 100);
+
+        statusMsg.innerText = "⏳ Sedang menghubungi server...";
+        statusMsg.style.color = "yellow";
+        btn.disabled = true;
+
+        fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify({
+                nama: nama,
+                kelas: kelas,
+                nilai: finalScore,
+                detail: `Benar ${correctCount}/6`
+            }),
+            mode: 'no-cors', // Penting untuk bypass CORS policy
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => {
+            statusMsg.innerText = "✅ DATA TERKIRIM! Terima kasih.";
+            statusMsg.style.color = "#00ff41";
+            alert(`Sukses! Nilai ${nama} (${finalScore}) sudah tersimpan.`);
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            statusMsg.innerText = "❌ Gagal mengirim. Cek koneksi internet.";
+            statusMsg.style.color = "red";
+            btn.disabled = false;
+        });
+    }
+</script>
+
+</body>
+</html>
